@@ -692,7 +692,8 @@ function initPostCreator() {
         image: previewImg.src, // Base64 encoded data representation
         caption: captionInput.value.trim(),
         likesCount: 0,
-        liked: false
+        liked: false,
+        comments: [] // Initialize empty comments array
       };
 
       // Retrieve existing list, unshift (newest first), and save back to localStorage
@@ -715,7 +716,7 @@ function initDynamicFeed() {
   const feedSection = document.getElementById('posts-feed-section');
   if (!feedSection) return;
 
-  // Default seed posts for first-time visitors
+  // Default seed posts for first-time visitors (now featuring custom comments)
   const defaultPosts = [
     {
       id: 'post-1',
@@ -725,7 +726,11 @@ function initDynamicFeed() {
       image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'><defs><linearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%231e1b4b'/><stop offset='50%25' stop-color='%23311042'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g1)'/><circle cx='300' cy='200' r='100' fill='%23ff304f' opacity='0.15'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-size='24' font-weight='bold' opacity='0.8'>Neon Vibes - Design Concepts</text></svg>",
       caption: 'Working on some fresh dark-mode layouts tonight. What do you think of this neon gradient colorway? Let me know! 🚀🎨',
       likesCount: 1248,
-      liked: false
+      liked: false,
+      comments: [
+        { id: 'c-1', username: 'sarah_m', text: 'This is gorgeous! 💜', timestamp: '1 hour ago' },
+        { id: 'c-2', username: 'lucas_dev', text: 'Stunning colors, what software did you use?', timestamp: '30m ago' }
+      ]
     },
     {
       id: 'post-2',
@@ -735,7 +740,10 @@ function initDynamicFeed() {
       image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'><defs><linearGradient id='g2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%230284c7'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g2)'/><path d='M50,300 Q150,150 250,250 T450,100 T550,200 L550,400 L50,400 Z' fill='%230369a1' opacity='0.4'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-size='24' font-weight='bold' opacity='0.8'>Chasing Horizons</text></svg>",
       caption: 'Chasing horizons. Reminiscing on this serene morning in the peaks. Nature has a beautiful way of resetting the soul. 🏔️✨',
       likesCount: 842,
-      liked: false
+      liked: false,
+      comments: [
+        { id: 'c-3', username: 'alex_design', text: 'Stunning view, Sarah!', timestamp: '4 hours ago' }
+      ]
     },
     {
       id: 'post-3',
@@ -745,7 +753,8 @@ function initDynamicFeed() {
       image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'><defs><linearGradient id='g3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23115e59'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g3)'/><rect x='150' y='100' width='300' height='200' rx='10' fill='%23000000' opacity='0.3'/><text x='50%25' y='45%25' dominant-baseline='middle' text-anchor='middle' fill='%232dd4bf' font-family='monospace' font-size='18' font-weight='bold'>npm run build</text><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='%238e8e93' font-family='monospace' font-size='14'>✓ Build completed in 2.3s</text></svg>",
       caption: 'Finally hit 100% test coverage and got the production build compilation under 3 seconds! Time to deploy. ☕💻🚀 #devlife #node',
       likesCount: 315,
-      liked: false
+      liked: false,
+      comments: []
     }
   ];
 
@@ -769,6 +778,20 @@ function initDynamicFeed() {
     const likedClass = isLiked ? 'liked' : '';
     const likedLabel = isLiked ? 'Liked' : 'Like';
     const likedStyle = isLiked ? 'style="color: var(--accent-color); border-color: rgba(255, 48, 79, 0.2); background-color: rgba(255, 48, 79, 0.04);"' : '';
+
+    // Generate inner comments HTML list
+    const postComments = post.comments || [];
+    let commentsHTML = '';
+    
+    postComments.forEach(comment => {
+      commentsHTML += `
+        <div class="comment-item">
+          <a href="/profile" class="comment-username">${comment.username}</a>
+          <span class="comment-text">${escapeHTML(comment.text)}</span>
+          <span class="comment-time">${comment.timestamp}</span>
+        </div>
+      `;
+    });
 
     const postHTML = `
       <article class="post-card" id="${post.id}">
@@ -814,13 +837,26 @@ function initDynamicFeed() {
             </button>
           </div>
 
-          <!-- Likes Count and Captions -->
+          <!-- Likes Count, Captions, Comments -->
           <div class="post-content">
             <p class="post-likes-count">${post.likesCount.toLocaleString()} likes</p>
             <p class="post-caption-text">
               <a href="/profile" class="caption-username">${post.username}</a> 
               ${escapeHTML(post.caption)}
             </p>
+            
+            <!-- Dynamic Comments List Container -->
+            <div class="post-comments-list" id="comments-list-${post.id}">
+              ${commentsHTML}
+            </div>
+          </div>
+
+          <!-- Inline Comment Form container -->
+          <div class="comment-form-container">
+            <form class="comment-form" data-post-id="${post.id}">
+              <input type="text" class="comment-input" placeholder="Add a comment..." required autocomplete="off">
+              <button type="submit" class="comment-post-btn">Post</button>
+            </form>
           </div>
 
         </footer>
@@ -833,6 +869,8 @@ function initDynamicFeed() {
 
   // Bind dropdown action toggles
   bindPostDropdowns();
+  // Bind dynamic comment submission events
+  initComments();
 }
 
 /**
@@ -908,6 +946,61 @@ function deleteLocalPost(postId) {
   if (posts.length === 0 && feedSection) {
     renderEmptyState(feedSection);
   }
+}
+
+/**
+ * 15. Comments Submission System (feed.html)
+ * Intercepts form submissions from comment fields, updates the post's comment
+ * structure inside localStorage, and appends the comment node at the bottom
+ * of the comments row (newest last).
+ */
+function initComments() {
+  const commentForms = document.querySelectorAll('.comment-form');
+  
+  commentForms.forEach(form => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const postId = form.getAttribute('data-post-id');
+      const input = form.querySelector('.comment-input');
+      const commentText = input.value.trim();
+      
+      if (!commentText) return;
+
+      const newComment = {
+        id: 'comment-' + Date.now(),
+        username: 'alex_design', // Mocked active user profile
+        text: commentText,
+        timestamp: 'Just now'
+      };
+
+      // Retrieve local posts, select post index, and push new comment
+      let posts = JSON.parse(localStorage.getItem('connectify_posts')) || [];
+      const postIndex = posts.findIndex(p => p.id === postId);
+      
+      if (postIndex !== -1) {
+        posts[postIndex].comments = posts[postIndex].comments || [];
+        posts[postIndex].comments.push(newComment); // Newest comments last
+        localStorage.setItem('connectify_posts', JSON.stringify(posts));
+
+        // Inject new comment element at the bottom of the comments list container
+        const commentsList = document.getElementById(`comments-list-${postId}`);
+        if (commentsList) {
+          const commentHTML = `
+            <div class="comment-item">
+              <a href="/profile" class="comment-username">${newComment.username}</a>
+              <span class="comment-text">${escapeHTML(newComment.text)}</span>
+              <span class="comment-time">${newComment.timestamp}</span>
+            </div>
+          `;
+          commentsList.insertAdjacentHTML('beforeend', commentHTML);
+        }
+
+        // Reset input text field
+        input.value = '';
+      }
+    });
+  });
 }
 
 /**

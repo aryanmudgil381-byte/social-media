@@ -47,6 +47,11 @@ app.get('/create-post', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'create-post.html'));
 });
 
+// 9.6. Define the route for the notifications page ('/notifications').
+app.get('/notifications', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'notifications.html'));
+});
+
 // 10. Define the route for the user profile page ('/profile').
 app.get('/profile', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'profile.html'));

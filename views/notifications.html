@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View your social notifications, post likes, comments, and new followers on Connectify.">
+  <title>Notifications - Connectify</title>
+  <!-- Link external stylesheet from the public css directory -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Link external script from the public js directory and load it asynchronously -->
+  <script src="/js/script.js" defer></script>
+</head>
+<body class="feed-page">
+
+  <!-- Sticky Navigation Bar -->
+  <header class="site-header" id="main-header">
+    <div class="header-container">
+      
+      <!-- Brand Logo -->
+      <div class="logo-container">
+        <a href="/" id="nav-logo" class="logo-link">
+          <span class="logo-text">Connectify</span>
+        </a>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <form action="/search" method="GET" class="search-form" id="nav-search-form">
+          <label for="nav-search-input" class="sr-only">Search</label>
+          <input type="search" name="q" id="nav-search-input" placeholder="Search posts, topics, people..." required>
+          <button type="submit" id="nav-search-btn" class="search-btn">
+            <span class="search-icon">🔍</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Auth Navigation Links -->
+      <nav class="auth-navigation" id="nav-menu" aria-label="Main navigation">
+        <a href="/login" id="nav-login-link" class="btn btn-login">Log In</a>
+        <a href="/register" id="nav-register-link" class="btn btn-register">Sign Up</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Feed Layout Container (Sidebar + Content) -->
+  <div class="feed-layout" id="feed-layout-container">
+    
+    <!-- Left Navigation Sidebar -->
+    <aside class="feed-sidebar" id="left-sidebar">
+      <nav class="sidebar-nav" aria-label="Sidebar navigation">
+        <ul class="sidebar-menu-list">
+          <li>
+            <a href="/feed" class="sidebar-item" id="sidebar-home-link">
+              <span class="sidebar-icon">🏠</span> <span class="sidebar-text">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="/explore" class="sidebar-item" id="sidebar-explore-link">
+              <span class="sidebar-icon">🌐</span> <span class="sidebar-text">Explore</span>
+            </a>
+          </li>
+          <li>
+            <a href="/create-post" class="sidebar-item" id="sidebar-create-link">
+              <span class="sidebar-icon">➕</span> <span class="sidebar-text">Create Post</span>
+            </a>
+          </li>
+          <li>
+            <a href="/messages" class="sidebar-item" id="sidebar-messages-link">
+              <span class="sidebar-icon">💬</span> <span class="sidebar-text">Messages</span>
+            </a>
+          </li>
+          <li>
+            <a href="/notifications" class="sidebar-item active" id="sidebar-notifications-link">
+              <span class="sidebar-icon">🔔</span> <span class="sidebar-text">Notifications</span>
+            </a>
+          </li>
+          <li>
+            <a href="/profile" class="sidebar-item" id="sidebar-profile-link">
+              <span class="sidebar-icon">👤</span> <span class="sidebar-text">Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="/settings" class="sidebar-item" id="sidebar-settings-link">
+              <span class="sidebar-icon">⚙️</span> <span class="sidebar-text">Settings</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="feed-main-content" id="main-content">
+      
+      <!-- Notifications Section -->
+      <section class="notifications-container-box" id="notifications-container">
+        
+        <header class="notifications-header">
+          <h1 class="notifications-title" id="notif-header-title">Notifications</h1>
+        </header>
+
+        <div class="notifications-list" id="notifications-list">
+          
+          <!-- Notification 1 (Unread) -->
+          <article class="notification-card unread" id="notif-1" tabindex="0">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%23f59e0b'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%23f59e0b'/></svg>" alt="Rahul's avatar" class="notif-avatar">
+            <div class="notif-content">
+              <p class="notif-text"><span class="notif-user">Rahul</span> liked your post.</p>
+              <time class="notif-time" datetime="2026-07-20T21:15:00Z">5m ago</time>
+            </div>
+            <div class="notif-status-dot" aria-label="Unread Notification"></div>
+          </article>
+
+          <!-- Notification 2 (Unread) -->
+          <article class="notification-card unread" id="notif-2" tabindex="0">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%2338bdf8'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%2338bdf8'/></svg>" alt="Aryan's avatar" class="notif-avatar">
+            <div class="notif-content">
+              <p class="notif-text"><span class="notif-user">Aryan</span> commented on your photo: "Awesome shot! 🔥"</p>
+              <time class="notif-time" datetime="2026-07-20T20:30:00Z">50m ago</time>
+            </div>
+            <div class="notif-status-dot" aria-label="Unread Notification"></div>
+          </article>
+
+          <!-- Notification 3 (Read) -->
+          <article class="notification-card" id="notif-3" tabindex="0">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%23a855f7'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%23a855f7'/></svg>" alt="Sneha's avatar" class="notif-avatar">
+            <div class="notif-content">
+              <p class="notif-text"><span class="notif-user">Sneha</span> started following you.</p>
+              <time class="notif-time" datetime="2026-07-19T21:00:00Z">1 day ago</time>
+            </div>
+          </article>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="main-footer">
+    <div class="footer-container">
+      <p class="footer-copyright" id="footer-copyright-text">&copy; 2026 Connectify Inc. All rights reserved.</p>
+      <nav class="footer-links" id="footer-links-navigation" aria-label="Footer navigation">
+        <a href="/about" id="footer-about-link">About</a>
+        <a href="/privacy" id="footer-privacy-link">Privacy Policy</a>
+        <a href="/terms" id="footer-terms-link">Terms of Service</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

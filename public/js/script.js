@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSidebarActiveState();
   initImagePopupModal();
   initPostCreator(); // Initialize Create Post page handlers
+  initNotifications(); // Initialize Notifications page handlers
 });
 
 /* ==========================================================================
@@ -1123,4 +1124,35 @@ function initLiveSearch() {
       dropdown.style.display = 'block';
     }
   });
+}
+
+/**
+ * 17. Notifications Interactive Handler (notifications.html)
+ * Binds click listeners to unread notification cards. Clicking an unread card
+ * removes the 'unread' class status and destroys the indicator dot instantly.
+ */
+function initNotifications() {
+  const unreadCards = document.querySelectorAll('.notification-card.unread');
+  
+  unreadCards.forEach(card => {
+    // Add click handler to toggle read state
+    card.addEventListener('click', () => {
+      markAsRead(card);
+    });
+
+    // Add keyboard accessibility handler (Enter key on focus)
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        markAsRead(card);
+      }
+    });
+  });
+
+  function markAsRead(cardElement) {
+    cardElement.classList.remove('unread');
+    const dot = cardElement.querySelector('.notif-status-dot');
+    if (dot) {
+      dot.remove();
+    }
+  }
 }

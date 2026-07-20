@@ -1386,6 +1386,106 @@ body {
 }
 
 /* ==========================================================================
+   Notifications Card Styles (notifications.html)
+   ========================================================================== */
+.notifications-container-box {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  width: 100%;
+  box-shadow: var(--shadow-md);
+}
+
+.notifications-header {
+  margin-bottom: 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  padding-bottom: 18px;
+}
+
+.notifications-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: var(--threads-glow);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-tertiary);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  position: relative;
+  outline: none;
+}
+
+.notification-card:hover,
+.notification-card:focus-visible {
+  border-color: var(--border-focus);
+  background-color: rgba(255, 255, 255, 0.02);
+  transform: translateX(2px);
+}
+
+.notification-card.unread {
+  background-color: rgba(255, 255, 255, 0.015);
+  border-color: rgba(255, 48, 79, 0.15);
+}
+
+.notif-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.notif-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.notif-text {
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  line-height: 1.45;
+}
+
+.notif-user {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.notif-time {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.notif-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--accent-color);
+  box-shadow: var(--shadow-glow);
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
    CSS Keyframes Animations
    ========================================================================== */
 @keyframes fadeInUp {

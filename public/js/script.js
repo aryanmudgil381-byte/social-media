@@ -331,21 +331,23 @@ function initRegistrationValidation() {
    ========================================================================== */
 
 /**
- * 9. Interactive Post Like toggling
- * Updates the like button color state and dynamically parses and increments/decrements
- * the post likes count directly in the UI.
+ * 9. Interactive Post Like Toggling & Double-Click animations
+ * Manages liked states in localStorage, updates counts instantly, triggers
+ * bounce animations on button clicks, and overlays pop hearts on post image double-clicks.
  */
 function initLikeToggle() {
   const likeButtons = document.querySelectorAll('.like-btn');
   
   likeButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      // Toggle liked state class
+      const postCard = btn.closest('.post-card');
+      if (!postCard) return;
+      
+      const postId = postCard.id;
       const isLiked = btn.classList.toggle('liked');
       
       // Update like text and icon colors dynamically
       const label = btn.querySelector('.action-label');
-      const icon = btn.querySelector('.action-icon');
       
       if (isLiked) {
         btn.style.color = 'var(--accent-color)';
@@ -359,23 +361,57 @@ function initLikeToggle() {
         if (label) label.textContent = 'Like';
       }
 
-      // Locate parent card to find and increment/decrement its specific likes counter
-      const postCard = btn.closest('.post-card');
-      if (postCard) {
+      // Update state in localStorage
+      let posts = JSON.parse(localStorage.getItem('connectify_posts')) || [];
+      const postIndex = posts.findIndex(p => p.id === postId);
+      
+      if (postIndex !== -1) {
+        // Toggle liked boolean
+        posts[postIndex].liked = isLiked;
+        
+        // Update likesCount number
+        if (isLiked) {
+          posts[postIndex].likesCount++;
+        } else {
+          posts[postIndex].likesCount--;
+        }
+        
+        localStorage.setItem('connectify_posts', JSON.stringify(posts));
+        
+        // Update DOM count
         const likesCountEl = postCard.querySelector('.post-likes-count');
         if (likesCountEl) {
-          // Parse number of likes using regex digits match
-          let likesCount = parseInt(likesCountEl.textContent.replace(/[^0-9]/g, ''), 10) || 0;
-          
-          if (isLiked) {
-            likesCount++;
-          } else {
-            likesCount--;
-          }
-          // Format back into localized string (comma separation)
-          likesCountEl.textContent = `${likesCount.toLocaleString()} likes`;
+          likesCountEl.textContent = `${posts[postIndex].likesCount.toLocaleString()} likes`;
         }
       }
+    });
+  });
+
+  // Enable Double-Click to Like on post images
+  const mediaContainers = document.querySelectorAll('.post-media-container');
+  mediaContainers.forEach(container => {
+    container.addEventListener('dblclick', () => {
+      const postCard = container.closest('.post-card');
+      if (!postCard) return;
+
+      const likeBtn = postCard.querySelector('.like-btn');
+      
+      // Trigger like click if not already liked
+      if (likeBtn && !likeBtn.classList.contains('liked')) {
+        likeBtn.click();
+      }
+
+      // Create and overlay the pop heart icon dynamically
+      const overlayHeart = document.createElement('span');
+      overlayHeart.className = 'overlay-heart-animation';
+      overlayHeart.innerHTML = '❤️';
+      
+      container.appendChild(overlayHeart);
+      
+      // Remove overlay element after keyframe animation terminates (800ms)
+      setTimeout(() => {
+        overlayHeart.remove();
+      }, 800);
     });
   });
 }
@@ -729,6 +765,11 @@ function initDynamicFeed() {
 
   // Render posts: dynamicPosts has new items at the beginning, so drawing them in order places newest at the top
   dynamicPosts.forEach(post => {
+    const isLiked = post.liked === true;
+    const likedClass = isLiked ? 'liked' : '';
+    const likedLabel = isLiked ? 'Liked' : 'Like';
+    const likedStyle = isLiked ? 'style="color: var(--accent-color); border-color: rgba(255, 48, 79, 0.2); background-color: rgba(255, 48, 79, 0.04);"' : '';
+
     const postHTML = `
       <article class="post-card" id="${post.id}">
         <!-- Post Header -->
@@ -761,8 +802,8 @@ function initDynamicFeed() {
           <!-- Interaction buttons row -->
           <div class="post-actions-row">
             <div class="primary-actions">
-              <button type="button" class="post-action-btn like-btn" aria-label="Like Post">
-                <span class="action-icon">❤️</span> <span class="action-label">Like</span>
+              <button type="button" class="post-action-btn like-btn ${likedClass}" ${likedStyle} aria-label="Like Post">
+                <span class="action-icon">❤️</span> <span class="action-label">${likedLabel}</span>
               </button>
               <button type="button" class="post-action-btn comment-btn" aria-label="Comment on Post">
                 <span class="action-icon">💬</span> <span class="action-label">Comment</span>

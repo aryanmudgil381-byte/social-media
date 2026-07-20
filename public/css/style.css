@@ -1187,6 +1187,58 @@ body {
 }
 
 /* ==========================================================================
+   Like Animation Styles
+   ========================================================================== */
+.overlay-heart-animation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  font-size: 5rem;
+  color: #ff304f;
+  pointer-events: none;
+  z-index: 10;
+  filter: drop-shadow(0 0 15px rgba(255, 48, 79, 0.6));
+  animation: heartPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes heartPop {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.9;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* Micro-bouncing action icon inside liked button */
+.like-btn.liked .action-icon {
+  animation: iconBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes iconBounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ==========================================================================
    CSS Keyframes Animations
    ========================================================================== */
 @keyframes fadeInUp {

@@ -672,15 +672,62 @@ function initPostCreator() {
 
 /**
  * 14. Load and Render Dynamic localStorage Posts (feed.html)
- * Retrieves posts created by the user from localStorage and prepends them
- * dynamically to the posts feed section before the standard demo posts.
+ * Seeds default posts on first run, displays a friendly empty state if no posts exist,
+ * renders posts newest-first, and binds dropdown option toggles & delete actions.
  */
 function initDynamicFeed() {
   const feedSection = document.getElementById('posts-feed-section');
   if (!feedSection) return;
 
-  const dynamicPosts = JSON.parse(localStorage.getItem('connectify_posts')) || [];
-  
+  // Default seed posts for first-time visitors
+  const defaultPosts = [
+    {
+      id: 'post-1',
+      username: 'alex_design',
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%2338bdf8'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%2338bdf8'/></svg>",
+      timestamp: '2 hours ago',
+      image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'><defs><linearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%231e1b4b'/><stop offset='50%25' stop-color='%23311042'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g1)'/><circle cx='300' cy='200' r='100' fill='%23ff304f' opacity='0.15'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-size='24' font-weight='bold' opacity='0.8'>Neon Vibes - Design Concepts</text></svg>",
+      caption: 'Working on some fresh dark-mode layouts tonight. What do you think of this neon gradient colorway? Let me know! 🚀🎨',
+      likesCount: 1248,
+      liked: false
+    },
+    {
+      id: 'post-2',
+      username: 'sarah_m',
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%23a855f7'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%23a855f7'/></svg>",
+      timestamp: '5 hours ago',
+      image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'><defs><linearGradient id='g2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%230284c7'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g2)'/><path d='M50,300 Q150,150 250,250 T450,100 T550,200 L550,400 L50,400 Z' fill='%230369a1' opacity='0.4'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-size='24' font-weight='bold' opacity='0.8'>Chasing Horizons</text></svg>",
+      caption: 'Chasing horizons. Reminiscing on this serene morning in the peaks. Nature has a beautiful way of resetting the soul. 🏔️✨',
+      likesCount: 842,
+      liked: false
+    },
+    {
+      id: 'post-3',
+      username: 'lucas_dev',
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%23f43f5e'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%23f43f5e'/></svg>",
+      timestamp: '1 day ago',
+      image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'><defs><linearGradient id='g3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23115e59'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g3)'/><rect x='150' y='100' width='300' height='200' rx='10' fill='%23000000' opacity='0.3'/><text x='50%25' y='45%25' dominant-baseline='middle' text-anchor='middle' fill='%232dd4bf' font-family='monospace' font-size='18' font-weight='bold'>npm run build</text><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='%238e8e93' font-family='monospace' font-size='14'>✓ Build completed in 2.3s</text></svg>",
+      caption: 'Finally hit 100% test coverage and got the production build compilation under 3 seconds! Time to deploy. ☕💻🚀 #devlife #node',
+      likesCount: 315,
+      liked: false
+    }
+  ];
+
+  let dynamicPosts = JSON.parse(localStorage.getItem('connectify_posts'));
+
+  // Seed default posts if key doesn't exist (first run ever)
+  if (dynamicPosts === null) {
+    dynamicPosts = defaultPosts;
+    localStorage.setItem('connectify_posts', JSON.stringify(defaultPosts));
+  }
+
+  // If feed is empty, render the friendly empty state
+  if (dynamicPosts.length === 0) {
+    renderEmptyState(feedSection);
+    return;
+  }
+
+  // Render posts: dynamicPosts has new items at the beginning, so drawing them in order places newest at the top
   dynamicPosts.forEach(post => {
     const postHTML = `
       <article class="post-card" id="${post.id}">
@@ -693,7 +740,14 @@ function initDynamicFeed() {
               <time class="post-time">${post.timestamp}</time>
             </div>
           </div>
-          <button type="button" class="post-options-btn" aria-label="More Options">•••</button>
+          <div class="post-options-wrapper">
+            <button type="button" class="post-options-btn" aria-label="More Options">•••</button>
+            <div class="post-options-dropdown" style="display: none;">
+              <button type="button" class="dropdown-item delete-post-btn" data-id="${post.id}">
+                <span class="dropdown-icon">🗑️</span> Delete Post
+              </button>
+            </div>
+          </div>
         </header>
 
         <!-- Post Main Image -->
@@ -721,7 +775,7 @@ function initDynamicFeed() {
 
           <!-- Likes Count and Captions -->
           <div class="post-content">
-            <p class="post-likes-count">${post.likesCount} likes</p>
+            <p class="post-likes-count">${post.likesCount.toLocaleString()} likes</p>
             <p class="post-caption-text">
               <a href="/profile" class="caption-username">${post.username}</a> 
               ${escapeHTML(post.caption)}
@@ -732,9 +786,87 @@ function initDynamicFeed() {
       </article>
     `;
     
-    // Insert at the top of the feed list
-    feedSection.insertAdjacentHTML('afterbegin', postHTML);
+    // Append to feed (ordered newest first in localStorage array, so we draw in sequence)
+    feedSection.insertAdjacentHTML('beforeend', postHTML);
   });
+
+  // Bind dropdown action toggles
+  bindPostDropdowns();
+}
+
+/**
+ * Renders the friendly empty-state card in the center of the feed.
+ */
+function renderEmptyState(container) {
+  container.innerHTML = `
+    <div class="feed-empty-state" id="feed-empty-state">
+      <div class="empty-state-icon" aria-hidden="true">🎴</div>
+      <h2 class="empty-state-title">Your Feed is Empty</h2>
+      <p class="empty-state-text">No posts have been published yet. Share your first moment to start the conversation!</p>
+      <a href="/create-post" class="btn btn-cta">Create Your First Post</a>
+    </div>
+  `;
+}
+
+/**
+ * Handles toggling and action handling of post dropdowns (like Delete).
+ */
+function bindPostDropdowns() {
+  const optionsButtons = document.querySelectorAll('.post-options-btn');
+  
+  optionsButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const dropdown = btn.nextElementSibling;
+      
+      // Close any other open dropdowns
+      document.querySelectorAll('.post-options-dropdown').forEach(d => {
+        if (d !== dropdown) d.style.display = 'none';
+      });
+
+      // Toggle current dropdown
+      dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    });
+  });
+
+  // Close dropdowns on background click
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.post-options-dropdown').forEach(d => {
+      d.style.display = 'none';
+    });
+  });
+
+  // Bind post delete triggers
+  const deleteButtons = document.querySelectorAll('.delete-post-btn');
+  deleteButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const postId = btn.getAttribute('data-id');
+      if (confirm('Are you sure you want to delete this post?')) {
+        deleteLocalPost(postId);
+      }
+    });
+  });
+}
+
+/**
+ * Deletes a post from localStorage, removes its node from the DOM,
+ * and renders the empty state if there are no posts remaining.
+ */
+function deleteLocalPost(postId) {
+  let posts = JSON.parse(localStorage.getItem('connectify_posts')) || [];
+  posts = posts.filter(p => p.id !== postId);
+  localStorage.setItem('connectify_posts', JSON.stringify(posts));
+
+  const card = document.getElementById(postId);
+  if (card) {
+    card.remove();
+  }
+
+  const feedSection = document.getElementById('posts-feed-section');
+  if (posts.length === 0 && feedSection) {
+    renderEmptyState(feedSection);
+  }
 }
 
 /**

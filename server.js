@@ -42,6 +42,11 @@ app.get('/feed', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'feed.html'));
 });
 
+// 9.5. Define the route for the create post page ('/create-post').
+app.get('/create-post', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'create-post.html'));
+});
+
 // 10. Define the route for the user profile page ('/profile').
 app.get('/profile', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'profile.html'));

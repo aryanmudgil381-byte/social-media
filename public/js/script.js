@@ -18,10 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initAvatarUploadPreview();
 
   // Feed View Interactions (feed.html)
+  initDynamicFeed(); // Load localStorage posts first to attach event listeners to them
   initLikeToggle();
   initStoryDragScroll();
   initSidebarActiveState();
   initImagePopupModal();
+  initPostCreator(); // Initialize Create Post page handlers
 });
 
 /* ==========================================================================
@@ -540,4 +542,212 @@ function initImagePopupModal() {
       document.addEventListener('keydown', handleEsc);
     });
   });
+}
+
+/**
+ * 13. Create Post Form Handler (create-post.html)
+ * Manages file picking, preview display overlays, local validation checks,
+ * and saves new posts as Base64 data blocks inside localStorage.
+ */
+function initPostCreator() {
+  const form = document.getElementById('create-post-form');
+  const fileInput = document.getElementById('post-image-input');
+  const dragArea = document.getElementById('drag-picker-area');
+  const previewWrapper = document.getElementById('post-preview-wrapper');
+  const previewImg = document.getElementById('post-image-preview');
+  const removeBtn = document.getElementById('remove-preview-btn');
+  const captionInput = document.getElementById('post-caption-input');
+  
+  if (!form || !fileInput || !dragArea) return;
+
+  // Handle Drag & Drop styling triggers
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dragArea.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      dragArea.classList.add('dragover');
+    }, false);
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    dragArea.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      dragArea.classList.remove('dragover');
+    }, false);
+  });
+
+  // Handle dropped files
+  dragArea.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    if (files.length) {
+      fileInput.files = files;
+      handlePostImageSelect(files[0]);
+    }
+  });
+
+  // Handle traditional input click upload
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      handlePostImageSelect(file);
+    }
+  });
+
+  // Render selected image preview in the UI
+  function handlePostImageSelect(file) {
+    // Confirm uploaded file is an image
+    if (!file.type.match('image.*')) {
+      alert('Please upload a valid image file (JPG, PNG, GIF).');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      previewImg.src = event.target.result;
+      dragArea.style.display = 'none';
+      previewWrapper.style.display = 'flex';
+      // Clear image error messages if any
+      document.getElementById('image-error').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Remove preview image
+  removeBtn.addEventListener('click', () => {
+    fileInput.value = ''; // Reset input selection
+    previewImg.src = '';
+    previewWrapper.style.display = 'none';
+    dragArea.style.display = 'flex';
+  });
+
+  // Validate form requirements and store post object
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    let isValid = true;
+    const imageError = document.getElementById('image-error');
+    const captionError = document.getElementById('caption-error');
+    
+    // Validate image presence
+    if (!fileInput.files.length && !previewImg.src) {
+      imageError.textContent = 'Please select or drag an image to share.';
+      imageError.style.display = 'block';
+      isValid = false;
+    } else {
+      imageError.style.display = 'none';
+    }
+
+    // Validate caption presence
+    if (!captionInput.value.trim()) {
+      captionError.textContent = 'Please enter a caption for your post.';
+      captionError.style.display = 'block';
+      isValid = false;
+    } else {
+      captionError.style.display = 'none';
+    }
+
+    if (isValid) {
+      // Create local storage representation of the post
+      const newPost = {
+        id: 'post-' + Date.now(),
+        username: 'alex_design', // Mock user profile
+        avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%2338bdf8'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%2338bdf8'/></svg>",
+        timestamp: 'Just now',
+        image: previewImg.src, // Base64 encoded data representation
+        caption: captionInput.value.trim(),
+        likesCount: 0,
+        liked: false
+      };
+
+      // Retrieve existing list, unshift (newest first), and save back to localStorage
+      const existingPosts = JSON.parse(localStorage.getItem('connectify_posts')) || [];
+      existingPosts.unshift(newPost);
+      localStorage.setItem('connectify_posts', JSON.stringify(existingPosts));
+      
+      // Redirect user to the feed page
+      window.location.href = '/feed';
+    }
+  });
+}
+
+/**
+ * 14. Load and Render Dynamic localStorage Posts (feed.html)
+ * Retrieves posts created by the user from localStorage and prepends them
+ * dynamically to the posts feed section before the standard demo posts.
+ */
+function initDynamicFeed() {
+  const feedSection = document.getElementById('posts-feed-section');
+  if (!feedSection) return;
+
+  const dynamicPosts = JSON.parse(localStorage.getItem('connectify_posts')) || [];
+  
+  dynamicPosts.forEach(post => {
+    const postHTML = `
+      <article class="post-card" id="${post.id}">
+        <!-- Post Header -->
+        <header class="post-header">
+          <div class="post-user-info">
+            <img src="${post.avatar}" alt="${post.username}'s avatar" class="post-avatar">
+            <div class="post-meta">
+              <a href="/profile" class="post-username">${post.username}</a>
+              <time class="post-time">${post.timestamp}</time>
+            </div>
+          </div>
+          <button type="button" class="post-options-btn" aria-label="More Options">•••</button>
+        </header>
+
+        <!-- Post Main Image -->
+        <div class="post-media-container">
+          <img src="${post.image}" alt="User uploaded post image" class="post-image">
+        </div>
+
+        <!-- Post Footer / Actions / Caption -->
+        <footer class="post-footer">
+          
+          <!-- Interaction buttons row -->
+          <div class="post-actions-row">
+            <div class="primary-actions">
+              <button type="button" class="post-action-btn like-btn" aria-label="Like Post">
+                <span class="action-icon">❤️</span> <span class="action-label">Like</span>
+              </button>
+              <button type="button" class="post-action-btn comment-btn" aria-label="Comment on Post">
+                <span class="action-icon">💬</span> <span class="action-label">Comment</span>
+              </button>
+            </div>
+            <button type="button" class="post-action-btn share-btn" aria-label="Share Post">
+              <span class="action-icon">📤</span> <span class="action-label">Share</span>
+            </button>
+          </div>
+
+          <!-- Likes Count and Captions -->
+          <div class="post-content">
+            <p class="post-likes-count">${post.likesCount} likes</p>
+            <p class="post-caption-text">
+              <a href="/profile" class="caption-username">${post.username}</a> 
+              ${escapeHTML(post.caption)}
+            </p>
+          </div>
+
+        </footer>
+      </article>
+    `;
+    
+    // Insert at the top of the feed list
+    feedSection.insertAdjacentHTML('afterbegin', postHTML);
+  });
+}
+
+/**
+ * Escapes characters to prevent XSS injection issues when outputting captions.
+ */
+function escapeHTML(str) {
+  return str.replace(/[&<>'"]/g, 
+    tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag)
+  );
 }

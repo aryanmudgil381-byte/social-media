@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create and publish a new post on Connectify. Upload images, write captions, and share stories with your network.">
+  <title>Create Post - Connectify</title>
+  <!-- Link external stylesheet from the public css directory -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Link external script from the public js directory and load it asynchronously -->
+  <script src="/js/script.js" defer></script>
+</head>
+<body class="feed-page">
+
+  <!-- Sticky Navigation Bar -->
+  <header class="site-header" id="main-header">
+    <div class="header-container">
+      
+      <!-- Brand Logo -->
+      <div class="logo-container">
+        <a href="/" id="nav-logo" class="logo-link">
+          <span class="logo-text">Connectify</span>
+        </a>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <form action="/search" method="GET" class="search-form" id="nav-search-form">
+          <label for="nav-search-input" class="sr-only">Search</label>
+          <input type="search" name="q" id="nav-search-input" placeholder="Search posts, topics, people..." required>
+          <button type="submit" id="nav-search-btn" class="search-btn">
+            <span class="search-icon">🔍</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Auth Navigation Links -->
+      <nav class="auth-navigation" id="nav-menu" aria-label="Main navigation">
+        <a href="/login" id="nav-login-link" class="btn btn-login">Log In</a>
+        <a href="/register" id="nav-register-link" class="btn btn-register">Sign Up</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Feed Layout Container (Sidebar + Content) -->
+  <div class="feed-layout" id="feed-layout-container">
+    
+    <!-- Left Navigation Sidebar -->
+    <aside class="feed-sidebar" id="left-sidebar">
+      <nav class="sidebar-nav" aria-label="Sidebar navigation">
+        <ul class="sidebar-menu-list">
+          <li>
+            <a href="/feed" class="sidebar-item" id="sidebar-home-link">
+              <span class="sidebar-icon">🏠</span> <span class="sidebar-text">Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="/explore" class="sidebar-item" id="sidebar-explore-link">
+              <span class="sidebar-icon">🌐</span> <span class="sidebar-text">Explore</span>
+            </a>
+          </li>
+          <li>
+            <a href="/create-post" class="sidebar-item active" id="sidebar-create-link">
+              <span class="sidebar-icon">➕</span> <span class="sidebar-text">Create Post</span>
+            </a>
+          </li>
+          <li>
+            <a href="/messages" class="sidebar-item" id="sidebar-messages-link">
+              <span class="sidebar-icon">💬</span> <span class="sidebar-text">Messages</span>
+            </a>
+          </li>
+          <li>
+            <a href="/notifications" class="sidebar-item" id="sidebar-notifications-link">
+              <span class="sidebar-icon">🔔</span> <span class="sidebar-text">Notifications</span>
+            </a>
+          </li>
+          <li>
+            <a href="/profile" class="sidebar-item" id="sidebar-profile-link">
+              <span class="sidebar-icon">👤</span> <span class="sidebar-text">Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="/settings" class="sidebar-item" id="sidebar-settings-link">
+              <span class="sidebar-icon">⚙️</span> <span class="sidebar-text">Settings</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="feed-main-content" id="main-content">
+      
+      <!-- Create Post Form Section -->
+      <section class="create-post-section" id="create-post-container">
+        <div class="post-creator-card">
+          
+          <header class="creator-card-header">
+            <h1 class="creator-title" id="creator-header-title">Create New Post</h1>
+            <p class="creator-subtitle">Upload an image and write a caption to share with your followers.</p>
+          </header>
+
+          <!-- Local-Storage Creation Form -->
+          <form class="creator-form" id="create-post-form" novalidate>
+            
+            <!-- Image Upload Box -->
+            <div class="image-select-container" id="image-select-box">
+              
+              <!-- File Drag/Click Picker Area -->
+              <div class="drag-picker-area" id="drag-picker-area">
+                <span class="picker-icon">📸</span>
+                <p class="picker-instruction">Click or drag an image here to upload</p>
+                <span class="picker-limits">Supports JPG, PNG, GIF up to 5MB</span>
+                <input type="file" name="post-image" id="post-image-input" accept="image/*" required>
+              </div>
+
+              <!-- Uploaded Image Preview Overlay -->
+              <div class="post-preview-wrapper" id="post-preview-wrapper" style="display: none;">
+                <img id="post-image-preview" src="" alt="Post image preview">
+                <button type="button" class="remove-preview-btn" id="remove-preview-btn" aria-label="Remove Image">✕</button>
+              </div>
+
+            </div>
+            <span class="error-message" id="image-error" aria-live="polite"></span>
+
+            <!-- Caption Field Box -->
+            <div class="form-group" id="group-caption">
+              <label for="post-caption-input" class="form-label">Write Caption</label>
+              <textarea name="caption" id="post-caption-input" class="form-input text-area-input" placeholder="What's on your mind? Add hashtags, descriptions..." required rows="4"></textarea>
+              <span class="error-message" id="caption-error" aria-live="polite"></span>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="form-actions">
+              <button type="submit" id="post-submit-btn" class="btn btn-cta btn-block">Share Post</button>
+            </div>
+
+          </form>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="main-footer">
+    <div class="footer-container">
+      <p class="footer-copyright" id="footer-copyright-text">&copy; 2026 Connectify Inc. All rights reserved.</p>
+      <nav class="footer-links" id="footer-links-navigation" aria-label="Footer navigation">
+        <a href="/about" id="footer-about-link">About</a>
+        <a href="/privacy" id="footer-privacy-link">Privacy Policy</a>
+        <a href="/terms" id="footer-terms-link">Terms of Service</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

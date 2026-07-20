@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initScrollAnimations();
   initSearchAnimation();
+  initLiveSearch(); // Initialize user search dropdown handler
 
   // Authentication Helpers (Login/Registration views)
   initPasswordVisibilityToggle();
@@ -1016,4 +1017,110 @@ function escapeHTML(str) {
       '"': '&quot;'
     }[tag] || tag)
   );
+}
+
+/**
+ * 16. User Search System (navbar dropdown)
+ * Binds input listeners to the search input, dynamically creates and injects
+ * a matching users dropdown overlay, and handles keyboard & blur hide events.
+ */
+function initLiveSearch() {
+  const searchInput = document.getElementById('nav-search-input');
+  const searchForm = document.getElementById('nav-search-form');
+  
+  if (!searchInput || !searchForm) return;
+
+  // Create the dropdown menu dynamically to avoid modifying multiple static HTML pages
+  const dropdown = document.createElement('div');
+  dropdown.id = 'search-results-dropdown';
+  dropdown.className = 'search-results-dropdown';
+  dropdown.style.display = 'none';
+  searchForm.appendChild(dropdown);
+
+  // Sample static user database
+  const sampleUsers = [
+    {
+      username: 'alex_design',
+      name: 'Alex Mercer',
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%2338bdf8'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%2338bdf8'/></svg>"
+    },
+    {
+      username: 'sarah_m',
+      name: 'Sarah Miller',
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%23a855f7'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%23a855f7'/></svg>"
+    },
+    {
+      username: 'lucas_dev',
+      name: 'Lucas Harris',
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%23f43f5e'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%23f43f5e'/></svg>"
+    },
+    {
+      username: 'emma_clicks',
+      name: 'Emma Watson',
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%2310b981'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%2310b981'/></svg>"
+    },
+    {
+      username: 'ryan_coder',
+      name: 'Ryan Mudgil',
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%23f59e0b'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%23f59e0b'/></svg>"
+    }
+  ];
+
+  // Input event triggers live search logic
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim().toLowerCase();
+    
+    // Hide dropdown if search query is empty
+    if (!query) {
+      dropdown.style.display = 'none';
+      dropdown.innerHTML = '';
+      return;
+    }
+
+    // Filter list by matching query to username or name
+    const matches = sampleUsers.filter(user => 
+      user.username.toLowerCase().includes(query) || 
+      user.name.toLowerCase().includes(query)
+    );
+
+    renderSearchResults(matches);
+  });
+
+  // Render match list inside absolute dropdown container
+  function renderSearchResults(users) {
+    dropdown.innerHTML = ''; // Clear previous results
+    dropdown.style.display = 'block';
+
+    if (users.length === 0) {
+      dropdown.innerHTML = '<div class="search-result-empty">No users found</div>';
+      return;
+    }
+
+    users.forEach(user => {
+      const itemHTML = `
+        <a href="/profile" class="search-result-item">
+          <img src="${user.avatar}" alt="${user.username}'s avatar" class="search-result-avatar">
+          <div class="search-result-info">
+            <span class="search-result-username">@${user.username}</span>
+            <span class="search-result-name">${user.name}</span>
+          </div>
+        </a>
+      `;
+      dropdown.insertAdjacentHTML('beforeend', itemHTML);
+    });
+  }
+
+  // Hide dropdown when clicking outside search container
+  document.addEventListener('click', (e) => {
+    if (!searchForm.contains(e.target)) {
+      dropdown.style.display = 'none';
+    }
+  });
+
+  // Restore dropdown on focusing search field if query has value
+  searchInput.addEventListener('focus', () => {
+    if (searchInput.value.trim()) {
+      dropdown.style.display = 'block';
+    }
+  });
 }

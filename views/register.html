@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create a new account on Connectify to start sharing posts, customize your profile, and connect with people.">
+  <title>Sign Up - Connectify</title>
+  <!-- Link external stylesheet from the public css directory -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Link external script from the public js directory and load it asynchronously -->
+  <script src="/js/script.js" defer></script>
+</head>
+<body class="auth-page">
+
+  <!-- Sticky Navigation Bar -->
+  <header class="site-header" id="main-header">
+    <div class="header-container">
+      
+      <!-- Brand Logo -->
+      <div class="logo-container">
+        <a href="/" id="nav-logo" class="logo-link">
+          <span class="logo-text">Connectify</span>
+        </a>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <form action="/search" method="GET" class="search-form" id="nav-search-form">
+          <label for="nav-search-input" class="sr-only">Search</label>
+          <input type="search" name="q" id="nav-search-input" placeholder="Search posts, topics, people..." required>
+          <button type="submit" id="nav-search-btn" class="search-btn">
+            <span class="search-icon">🔍</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Auth Navigation Links -->
+      <nav class="auth-navigation" id="nav-menu" aria-label="Main navigation">
+        <a href="/login" id="nav-login-link" class="btn btn-login">Log In</a>
+        <a href="/register" id="nav-register-link" class="btn btn-register">Sign Up</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Main Registration Container -->
+  <main class="main-content auth-main" id="main-content">
+    <section class="auth-card-section" id="register-section">
+      <div class="auth-card">
+        
+        <!-- Header info -->
+        <header class="auth-card-header">
+          <h1 class="auth-title" id="register-header-title">Create an Account</h1>
+          <p class="auth-subtitle">Join Connectify today and build your network.</p>
+        </header>
+
+        <!-- Registration Form (uses native browser constraints for validation) -->
+        <form class="auth-form" id="register-form" novalidate>
+          
+          <!-- Profile Picture Upload & Preview -->
+          <div class="profile-upload-container" id="group-profile-upload">
+            <div class="avatar-preview-wrapper">
+              <!-- Inline SVG default avatar placeholder for modern, zero-dependency dark aesthetics -->
+              <img id="avatar-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2318181c'/><circle cx='50' cy='40' r='20' fill='%2352525b'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%2352525b'/></svg>" alt="Profile picture preview">
+            </div>
+            <div class="upload-btn-wrapper">
+              <label for="register-avatar" class="btn btn-login" id="avatar-upload-label">Choose Profile Picture</label>
+              <input type="file" name="avatar" id="register-avatar" accept="image/*">
+            </div>
+          </div>
+
+          <!-- Full Name Input Field -->
+          <div class="form-group" id="group-fullname">
+            <label for="register-fullname" class="form-label">Full Name</label>
+            <input type="text" name="fullname" id="register-fullname" class="form-input" placeholder="John Doe" required minlength="2" maxlength="50" autocomplete="name">
+            <span class="error-message" id="fullname-error" aria-live="polite"></span>
+          </div>
+
+          <!-- Username Input Field -->
+          <div class="form-group" id="group-username">
+            <label for="register-username" class="form-label">Username</label>
+            <input type="text" name="username" id="register-username" class="form-input" placeholder="johndoe123" required minlength="3" maxlength="20" pattern="^[a-zA-Z0-9_]+$" autocomplete="username">
+            <span class="error-message" id="username-error" aria-live="polite"></span>
+          </div>
+
+          <!-- Email Input Field -->
+          <div class="form-group" id="group-email">
+            <label for="register-email" class="form-label">Email Address</label>
+            <input type="email" name="email" id="register-email" class="form-input" placeholder="name@example.com" required autocomplete="email">
+            <span class="error-message" id="email-error" aria-live="polite"></span>
+          </div>
+
+          <!-- Password Input Field -->
+          <div class="form-group" id="group-password">
+            <label for="register-password" class="form-label">Password</label>
+            <input type="password" name="password" id="register-password" class="form-input" placeholder="Minimum 8 characters" required minlength="8" autocomplete="new-password">
+            <span class="error-message" id="password-error" aria-live="polite"></span>
+          </div>
+
+          <!-- Confirm Password Input Field -->
+          <div class="form-group" id="group-confirm-password">
+            <label for="register-confirm-password" class="form-label">Confirm Password</label>
+            <input type="password" name="confirm-password" id="register-confirm-password" class="form-input" placeholder="Re-enter password" required minlength="8" autocomplete="new-password">
+            <span class="error-message" id="confirm-password-error" aria-live="polite"></span>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="form-actions" id="group-submit">
+            <button type="submit" id="register-submit-btn" class="btn btn-cta btn-block">Sign Up</button>
+          </div>
+
+        </form>
+
+        <!-- Redirect to Login -->
+        <footer class="auth-card-footer">
+          <p class="auth-footer-text">
+            Already have an account? 
+            <a href="/login" id="login-redirect-link" class="form-link-primary">Log In</a>
+          </p>
+        </footer>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="main-footer">
+    <div class="footer-container">
+      <p class="footer-copyright" id="footer-copyright-text">&copy; 2026 Connectify Inc. All rights reserved.</p>
+      <nav class="footer-links" id="footer-links-navigation" aria-label="Footer navigation">
+        <a href="/about" id="footer-about-link">About</a>
+        <a href="/privacy" id="footer-privacy-link">Privacy Policy</a>
+        <a href="/terms" id="footer-terms-link">Terms of Service</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

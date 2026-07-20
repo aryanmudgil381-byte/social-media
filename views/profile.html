@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View alex_design's profile on Connectify. Browse their digital designs, post timeline, followers, and bio.">
+  <title>Alex Mercer (@alex_design) - Connectify</title>
+  <!-- Link external stylesheet from the public css directory -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Link external script from the public js directory and load it asynchronously -->
+  <script src="/js/script.js" defer></script>
+</head>
+<body class="profile-page">
+
+  <!-- Sticky Navigation Bar -->
+  <header class="site-header" id="main-header">
+    <div class="header-container">
+      
+      <!-- Brand Logo -->
+      <div class="logo-container">
+        <a href="/" id="nav-logo" class="logo-link">
+          <span class="logo-text">Connectify</span>
+        </a>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <form action="/search" method="GET" class="search-form" id="nav-search-form">
+          <label for="nav-search-input" class="sr-only">Search</label>
+          <input type="search" name="q" id="nav-search-input" placeholder="Search posts, topics, people..." required>
+          <button type="submit" id="nav-search-btn" class="search-btn">
+            <span class="search-icon">🔍</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Auth Navigation Links -->
+      <nav class="auth-navigation" id="nav-menu" aria-label="Main navigation">
+        <a href="/login" id="nav-login-link" class="btn btn-login">Log In</a>
+        <a href="/register" id="nav-register-link" class="btn btn-register">Sign Up</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Profile Layout Container -->
+  <main class="main-profile-area" id="main-content">
+    
+    <!-- Profile Info Header Section -->
+    <header class="profile-header-container">
+      
+      <!-- Cover Banner Graphic (Abstract linear gradient design) -->
+      <div class="cover-banner-wrapper" id="profile-cover-banner">
+        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='300' viewBox='0 0 1200 300'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23180828'/><stop offset='50%25' stop-color='%234c0519'/><stop offset='100%25' stop-color='%23020617'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g)'/><g fill='%23ffffff' opacity='0.05'><circle cx='100' cy='150' r='80'/><circle cx='1100' cy='100' r='120'/><rect x='450' y='50' width='300' height='200' rx='50' transform='rotate(15, 600, 150)'/></g></svg>" alt="Profile cover banner background" class="cover-image">
+      </div>
+
+      <!-- Profile Avatar, Bio, and Statistics Info -->
+      <div class="profile-info-section">
+        <div class="profile-identity-row">
+          
+          <!-- Circular Profile Photo -->
+          <div class="profile-avatar-outer" id="profile-avatar">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%2338bdf8'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%2338bdf8'/></svg>" alt="Alex Mercer's profile picture" class="profile-avatar-img">
+          </div>
+
+          <!-- User Details and Actions -->
+          <div class="profile-meta-details">
+            <div class="username-actions-row">
+              <h1 class="profile-username-title" id="profile-username">alex_design</h1>
+              <button type="button" class="btn btn-login" id="edit-profile-btn">Edit Profile</button>
+            </div>
+
+            <!-- Profile Stats list -->
+            <ul class="profile-stats-list" id="profile-stats">
+              <li><span class="stat-num" id="stat-posts">6</span> posts</li>
+              <li><span class="stat-num" id="stat-followers">12.5k</span> followers</li>
+              <li><span class="stat-num" id="stat-following">482</span> following</li>
+            </ul>
+
+            <!-- Bio text card -->
+            <div class="profile-bio-card">
+              <h2 class="profile-fullname" id="profile-fullname">Alex Mercer</h2>
+              <p class="profile-bio-text" id="profile-bio-text">
+                Digital Artist & Product Designer. Creating dark-themed web assets and cyber concepts. Designing the future one pixel at a time. 🌌🎨
+              </p>
+              <a href="https://portfolio.alex" target="_blank" rel="noopener noreferrer" class="profile-bio-link" id="profile-bio-link">
+                🔗 portfolio.alex
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Tab Navigation indicators -->
+      <div class="profile-tabs-navigation" id="profile-tabs">
+        <button type="button" class="profile-tab-item active" id="tab-posts" aria-selected="true">
+          <span class="tab-icon">🎴</span> Posts
+        </button>
+        <button type="button" class="profile-tab-item" id="tab-saved" aria-selected="false">
+          <span class="tab-icon">🔖</span> Saved
+        </button>
+        <button type="button" class="profile-tab-item" id="tab-tagged" aria-selected="false">
+          <span class="tab-icon">🏷️</span> Tagged
+        </button>
+      </div>
+
+    </header>
+
+    <!-- Responsive Image Gallery Section -->
+    <section class="profile-gallery-section" id="profile-gallery" aria-label="Posts gallery">
+      <div class="gallery-grid">
+        
+        <!-- Gallery Item 1 -->
+        <article class="gallery-item" id="gallery-item-1">
+          <div class="gallery-media-wrapper">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><defs><linearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%231e1b4b'/><stop offset='50%25' stop-color='%23311042'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g1)'/><circle cx='200' cy='200' r='60' fill='%23ff304f' opacity='0.15'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-size='18' font-weight='bold' opacity='0.7'>Neon Vibes</text></svg>" alt="Neon design concept art" class="post-image">
+            <div class="gallery-item-overlay">
+              <span class="overlay-stat">❤️ 1.2k</span>
+              <span class="overlay-stat">💬 84</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Gallery Item 2 -->
+        <article class="gallery-item" id="gallery-item-2">
+          <div class="gallery-media-wrapper">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><defs><linearGradient id='g2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%230284c7'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g2)'/><path d='M50,300 Q150,150 250,250 T350,150 L350,400 L50,400 Z' fill='%230369a1' opacity='0.4'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-size='18' font-weight='bold' opacity='0.7'>Chasing Horizons</text></svg>" alt="Mountain landscape sketch design" class="post-image">
+            <div class="gallery-item-overlay">
+              <span class="overlay-stat">❤️ 842</span>
+              <span class="overlay-stat">💬 52</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Gallery Item 3 -->
+        <article class="gallery-item" id="gallery-item-3">
+          <div class="gallery-media-wrapper">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><defs><linearGradient id='g3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23115e59'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g3)'/><text x='50%25' y='45%25' dominant-baseline='middle' text-anchor='middle' fill='%232dd4bf' font-family='monospace' font-size='16' font-weight='bold'>npm run build</text><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='%238e8e93' font-family='monospace' font-size='12'>✓ Build completed</text></svg>" alt="Build success terminal layout art" class="post-image">
+            <div class="gallery-item-overlay">
+              <span class="overlay-stat">❤️ 315</span>
+              <span class="overlay-stat">💬 19</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Gallery Item 4 -->
+        <article class="gallery-item" id="gallery-item-4">
+          <div class="gallery-media-wrapper">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><defs><linearGradient id='g4' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23701a75'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g4)'/><circle cx='200' cy='200' r='80' fill='none' stroke='%23f472b6' stroke-width='4' opacity='0.3'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-size='18' font-weight='bold' opacity='0.7'>Abstract Spheres</text></svg>" alt="Abstract geometry sphere rendering" class="post-image">
+            <div class="gallery-item-overlay">
+              <span class="overlay-stat">❤️ 920</span>
+              <span class="overlay-stat">💬 63</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Gallery Item 5 -->
+        <article class="gallery-item" id="gallery-item-5">
+          <div class="gallery-media-wrapper">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><defs><linearGradient id='g5' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23831843'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g5)'/><rect x='100' y='100' width='200' height='200' rx='20' fill='none' stroke='%23fda4af' stroke-width='3' opacity='0.25'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-size='18' font-weight='bold' opacity='0.7'>Cyber UI Concept</text></svg>" alt="Cyberpunk design interface dashboard layout" class="post-image">
+            <div class="gallery-item-overlay">
+              <span class="overlay-stat">❤️ 704</span>
+              <span class="overlay-stat">💬 41</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Gallery Item 6 -->
+        <article class="gallery-item" id="gallery-item-6">
+          <div class="gallery-media-wrapper">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><defs><linearGradient id='g6' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%2314532d'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23g6)'/><path d='M100,200 L150,150 L200,250 L250,100 L300,300' fill='none' stroke='%234ade80' stroke-width='4' opacity='0.5'/><text x='50%25' y='80%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-size='18' font-weight='bold' opacity='0.7'>Equalizer Waves</text></svg>" alt="Frequency wavelength visualizer graphics" class="post-image">
+            <div class="gallery-item-overlay">
+              <span class="overlay-stat">❤️ 612</span>
+              <span class="overlay-stat">💬 33</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="main-footer">
+    <div class="footer-container">
+      <p class="footer-copyright" id="footer-copyright-text">&copy; 2026 Connectify Inc. All rights reserved.</p>
+      <nav class="footer-links" id="footer-links-navigation" aria-label="Footer navigation">
+        <a href="/about" id="footer-about-link">About</a>
+        <a href="/privacy" id="footer-privacy-link">Privacy Policy</a>
+        <a href="/terms" id="footer-terms-link">Terms of Service</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

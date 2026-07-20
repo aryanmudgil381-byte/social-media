@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Connectify is a modern social media platform designed to share moments, engage with friends, and discover thriving communities.">
+  <title>Connectify - Share, Connect, Discover</title>
+  <!-- Link external stylesheet from the public css directory -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Link external script from the public js directory and load it asynchronously -->
+  <script src="/js/script.js" defer></script>
+</head>
+<body>
+
+  <!-- Sticky Navigation Bar -->
+  <header class="site-header" id="main-header">
+    <div class="header-container">
+      
+      <!-- Brand Logo -->
+      <div class="logo-container">
+        <a href="/" id="nav-logo" class="logo-link">
+          <span class="logo-text">Connectify</span>
+        </a>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <form action="/search" method="GET" class="search-form" id="nav-search-form">
+          <label for="nav-search-input" class="sr-only">Search</label>
+          <input type="search" name="q" id="nav-search-input" placeholder="Search posts, topics, people..." required>
+          <button type="submit" id="nav-search-btn" class="search-btn">
+            <span class="search-icon">🔍</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Auth Navigation Links -->
+      <nav class="auth-navigation" id="nav-menu" aria-label="Main navigation">
+        <a href="/login" id="nav-login-link" class="btn btn-login">Log In</a>
+        <a href="/register" id="nav-register-link" class="btn btn-register">Sign Up</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="main-content" id="main-content">
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="hero-section">
+      <div class="hero-container">
+        <div class="hero-text-content">
+          <h1 class="hero-title" id="main-hero-title">Connect with friends, share your world, stay updated.</h1>
+          <p class="hero-description" id="hero-tagline">
+            Experience a modern social network built with privacy, sleek design, and active community interaction in mind.
+          </p>
+          <div class="hero-cta-group">
+            <a href="/register" id="hero-cta-btn" class="btn btn-cta">Get Started for Free</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Grid Section -->
+    <section class="features-section" id="features-section">
+      <div class="features-container">
+        <h2 class="section-title" id="features-title">Features Designed for You</h2>
+        
+        <div class="features-grid">
+          
+          <!-- Feature 1: Live Feed -->
+          <article class="feature-card" id="feature-feed-card">
+            <div class="feature-icon" aria-hidden="true">📣</div>
+            <h3 class="feature-name">Dynamic Live Feed</h3>
+            <p class="feature-text">Stay up to date with posts from friends and interests. Engage with reactions and seamless commenting.</p>
+          </article>
+
+          <!-- Feature 2: Rich Media Profiles -->
+          <article class="feature-card" id="feature-profile-card">
+            <div class="feature-icon" aria-hidden="true">👤</div>
+            <h3 class="feature-name">Sleek User Profiles</h3>
+            <p class="feature-text">Personalize your profile with custom bios, cover photos, and showcase your highlights beautifully.</p>
+          </article>
+
+          <!-- Feature 3: Privacy Control -->
+          <article class="feature-card" id="feature-privacy-card">
+            <div class="feature-icon" aria-hidden="true">🔒</div>
+            <h3 class="feature-name">Privacy Centric</h3>
+            <p class="feature-text">Take full control of your visibility. Restrict post visibility and custom-manage sharing levels.</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="main-footer">
+    <div class="footer-container">
+      <p class="footer-copyright" id="footer-copyright-text">&copy; 2026 Connectify Inc. All rights reserved.</p>
+      <nav class="footer-links" id="footer-links-navigation" aria-label="Footer navigation">
+        <a href="/about" id="footer-about-link">About</a>
+        <a href="/privacy" id="footer-privacy-link">Privacy Policy</a>
+        <a href="/terms" id="footer-terms-link">Terms of Service</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

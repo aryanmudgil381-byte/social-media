@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Log in to your Connectify account to view your feed, interact with friends, and join custom communities.">
+  <title>Log In - Connectify</title>
+  <!-- Link external stylesheet from the public css directory -->
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Link external script from the public js directory and load it asynchronously -->
+  <script src="/js/script.js" defer></script>
+</head>
+<body class="auth-page">
+
+  <!-- Sticky Navigation Bar -->
+  <header class="site-header" id="main-header">
+    <div class="header-container">
+      
+      <!-- Brand Logo -->
+      <div class="logo-container">
+        <a href="/" id="nav-logo" class="logo-link">
+          <span class="logo-text">Connectify</span>
+        </a>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <form action="/search" method="GET" class="search-form" id="nav-search-form">
+          <label for="nav-search-input" class="sr-only">Search</label>
+          <input type="search" name="q" id="nav-search-input" placeholder="Search posts, topics, people..." required>
+          <button type="submit" id="nav-search-btn" class="search-btn">
+            <span class="search-icon">🔍</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Auth Navigation Links -->
+      <nav class="auth-navigation" id="nav-menu" aria-label="Main navigation">
+        <a href="/login" id="nav-login-link" class="btn btn-login">Log In</a>
+        <a href="/register" id="nav-register-link" class="btn btn-register">Sign Up</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Main Login Container -->
+  <main class="main-content auth-main" id="main-content">
+    <section class="auth-card-section" id="login-section">
+      <div class="auth-card">
+        
+        <!-- Header info -->
+        <header class="auth-card-header">
+          <h1 class="auth-title" id="login-header-title">Log in to Connectify</h1>
+          <p class="auth-subtitle">Welcome back! Please enter your details below.</p>
+        </header>
+
+        <!-- Login Form -->
+        <form action="/api/login" method="POST" class="auth-form" id="login-form">
+          
+          <!-- Email Input Field -->
+          <div class="form-group" id="group-email">
+            <label for="login-email" class="form-label">Email Address</label>
+            <input type="email" name="email" id="login-email" class="form-input" placeholder="name@example.com" required autocomplete="email">
+          </div>
+
+          <!-- Password Input Field -->
+          <div class="form-group" id="group-password">
+            <div class="form-label-row">
+              <label for="login-password" class="form-label">Password</label>
+              <a href="/forgot-password" id="forgot-password-link" class="form-link-secondary">Forgot Password?</a>
+            </div>
+            
+            <div class="password-input-wrapper">
+              <input type="password" name="password" id="login-password" class="form-input password-input" placeholder="Enter your password" required autocomplete="current-password">
+              <!-- Toggle Password Visibility Button -->
+              <button type="button" id="toggle-password-btn" class="toggle-password-btn" aria-label="Toggle password visibility" aria-pressed="false">
+                Show
+              </button>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="form-actions" id="group-submit">
+            <button type="submit" id="login-submit-btn" class="btn btn-cta btn-block">Log In</button>
+          </div>
+
+        </form>
+
+        <!-- Redirect to Registration -->
+        <footer class="auth-card-footer">
+          <p class="auth-footer-text">
+            Don't have an account? 
+            <a href="/register" id="register-redirect-link" class="form-link-primary">Sign Up</a>
+          </p>
+        </footer>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="main-footer">
+    <div class="footer-container">
+      <p class="footer-copyright" id="footer-copyright-text">&copy; 2026 Connectify Inc. All rights reserved.</p>
+      <nav class="footer-links" id="footer-links-navigation" aria-label="Footer navigation">
+        <a href="/about" id="footer-about-link">About</a>
+        <a href="/privacy" id="footer-privacy-link">Privacy Policy</a>
+        <a href="/terms" id="footer-terms-link">Terms of Service</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

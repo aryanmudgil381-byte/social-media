@@ -181,6 +181,55 @@
       </div>
     </section>
 
+    <!-- Edit Profile Modal Overlay -->
+    <div class="edit-profile-modal-overlay" id="edit-profile-modal" style="display: none;">
+      <div class="edit-profile-modal-card">
+        
+        <header class="modal-card-header">
+          <h2 class="modal-card-title">Edit Profile</h2>
+          <button type="button" class="modal-close-btn" id="close-profile-modal-btn" aria-label="Close Modal">✕</button>
+        </header>
+
+        <form class="modal-form" id="edit-profile-form">
+          
+          <!-- Avatar Edit Area -->
+          <div class="modal-avatar-edit">
+            <div class="modal-avatar-preview-wrapper">
+              <img id="modal-avatar-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%2338bdf8'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%2338bdf8'/></svg>" alt="Edit Avatar Preview">
+            </div>
+            <div class="upload-btn-wrapper">
+              <label for="edit-avatar-input" class="btn btn-login" id="edit-avatar-label">Change Photo</label>
+              <input type="file" id="edit-avatar-input" accept="image/*">
+            </div>
+          </div>
+
+          <!-- Full Name Input -->
+          <div class="form-group">
+            <label for="edit-fullname-input" class="form-label">Full Name</label>
+            <input type="text" id="edit-fullname-input" class="form-input" placeholder="Enter full name" required minlength="2" maxlength="50">
+          </div>
+
+          <!-- Bio Textarea -->
+          <div class="form-group">
+            <label for="edit-bio-input" class="form-label">Bio Description</label>
+            <textarea id="edit-bio-input" class="form-input text-area-input" placeholder="Tell us about yourself..." rows="3" maxlength="160"></textarea>
+          </div>
+
+          <!-- Website Input -->
+          <div class="form-group">
+            <label for="edit-website-input" class="form-label">Website Links</label>
+            <input type="url" id="edit-website-input" class="form-input" placeholder="https://yourportfolio.com">
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="save-profile-btn" class="btn btn-cta btn-block">Save Changes</button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
   </main>
 
   <!-- Site Footer -->

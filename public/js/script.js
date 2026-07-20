@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initImagePopupModal();
   initPostCreator(); // Initialize Create Post page handlers
   initNotifications(); // Initialize Notifications page handlers
+  initEditProfile(); // Initialize Edit Profile modal handlers
 });
 
 /* ==========================================================================
@@ -1155,4 +1156,137 @@ function initNotifications() {
       dot.remove();
     }
   }
+}
+
+/**
+ * 18. Edit Profile & User Bio System (profile.html)
+ * Loads user profile data (name, bio, website link, avatar) from localStorage,
+ * handles edit modal toggle views, registers avatar file-reader loaders, and
+ * updates profiles live on saved changes.
+ */
+function initEditProfile() {
+  // Default fallback user values if localStorage is unseeded
+  const defaultProfile = {
+    fullname: 'Alex Mercer',
+    bio: 'Digital Artist & Product Designer. Creating dark-themed web assets and cyber concepts. Designing the future one pixel at a time. 🌌🎨',
+    website: 'https://portfolio.alex',
+    avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%2338bdf8'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%2338bdf8'/></svg>"
+  };
+
+  // Seed data if none exists
+  let profileData = JSON.parse(localStorage.getItem('connectify_user_profile'));
+  if (!profileData) {
+    profileData = defaultProfile;
+    localStorage.setItem('connectify_user_profile', JSON.stringify(defaultProfile));
+  }
+
+  // DOM Elements - Profile Info Card
+  const fullnameEl = document.getElementById('profile-fullname');
+  const bioTextEl = document.getElementById('profile-bio-text');
+  const bioLinkEl = document.getElementById('profile-bio-link');
+  const avatarImgs = document.querySelectorAll('.profile-avatar-img');
+
+  // DOM Elements - Modal Details
+  const modal = document.getElementById('edit-profile-modal');
+  const editBtn = document.getElementById('edit-profile-btn');
+  const closeBtn = document.getElementById('close-profile-modal-btn');
+  const editForm = document.getElementById('edit-profile-form');
+
+  const fullnameInput = document.getElementById('edit-fullname-input');
+  const bioInput = document.getElementById('edit-bio-input');
+  const websiteInput = document.getElementById('edit-website-input');
+  const avatarInput = document.getElementById('edit-avatar-input');
+  const avatarPreview = document.getElementById('modal-avatar-preview');
+
+  // Helper function to update the page view with local storage data
+  function updateProfileView(data) {
+    if (fullnameEl) fullnameEl.textContent = data.fullname;
+    if (bioTextEl) bioTextEl.textContent = data.bio;
+    
+    if (bioLinkEl) {
+      if (data.website) {
+        bioLinkEl.href = data.website;
+        bioLinkEl.textContent = `🔗 ${data.website.replace(/^https?:\/\/(www\.)?/, '')}`;
+        bioLinkEl.style.display = 'inline-block';
+      } else {
+        bioLinkEl.style.display = 'none';
+      }
+    }
+
+    if (avatarImgs.length > 0) {
+      avatarImgs.forEach(img => {
+        img.src = data.avatar;
+      });
+    }
+  }
+
+  // Run update initially to populate page values
+  updateProfileView(profileData);
+
+  // If we are not on the profile page, exit early to avoid attaching null listener errors
+  if (!editBtn || !modal) return;
+
+  // Open modal
+  editBtn.addEventListener('click', () => {
+    // Sync current values to modal input fields
+    fullnameInput.value = profileData.fullname;
+    bioInput.value = profileData.bio;
+    websiteInput.value = profileData.website || '';
+    avatarPreview.src = profileData.avatar;
+    
+    modal.style.display = 'flex';
+  });
+
+  // Close modal
+  closeBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+
+  // Close modal on overlay click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+
+  // Avatar file input listener
+  avatarInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file size (under 3MB for localStorage capacity limits)
+      if (file.size > 3 * 1024 * 1024) {
+        alert('Image file size is too large. Please select an image under 3MB.');
+        avatarInput.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        avatarPreview.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Submit profile edit form
+  editForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const updatedData = {
+      fullname: fullnameInput.value.trim(),
+      bio: bioInput.value.trim(),
+      website: websiteInput.value.trim(),
+      avatar: avatarPreview.src // Base64 data url from preview image source
+    };
+
+    // Save to localStorage
+    profileData = updatedData;
+    localStorage.setItem('connectify_user_profile', JSON.stringify(updatedData));
+
+    // Update active profile page elements
+    updateProfileView(updatedData);
+
+    // Hide edit modal
+    modal.style.display = 'none';
+  });
 }

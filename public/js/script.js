@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDynamicFeed(); // Load localStorage posts first to attach event listeners to them
   initLikeToggle();
   initStoryDragScroll();
+  initStoryViewer(); // Initialize Stories Modal viewer
   initSidebarActiveState();
   initImagePopupModal();
   initPostCreator(); // Initialize Create Post page handlers
@@ -1288,5 +1289,146 @@ function initEditProfile() {
 
     // Hide edit modal
     modal.style.display = 'none';
+  });
+}
+
+/**
+ * 19. Stories Modal Viewer System (feed.html)
+ * Dynamically creates the story modal viewer markup, binds click triggers on active stories,
+ * handles linear progress bar transitions, and auto-closes stories after 5 seconds.
+ */
+function initStoryViewer() {
+  const storiesSection = document.getElementById('stories-section');
+  if (!storiesSection) return;
+
+  // Insert Stories viewer markup into the DOM dynamically
+  const viewerHTML = `
+    <div class="story-viewer-overlay" id="story-viewer" style="display: none;">
+      <div class="story-viewer-card">
+        
+        <!-- Progress Bar Indicator -->
+        <div class="story-progress-container">
+          <div class="story-progress-bar" id="story-progress-bar"></div>
+        </div>
+
+        <!-- Story header info -->
+        <header class="story-viewer-header">
+          <div class="story-viewer-user">
+            <img id="story-viewer-avatar" src="" alt="Story user avatar" class="story-viewer-avatar">
+            <span id="story-viewer-username" class="story-viewer-username"></span>
+          </div>
+          <button type="button" class="story-close-btn" id="close-story-btn" aria-label="Close Story">✕</button>
+        </header>
+
+        <!-- Main story content -->
+        <div class="story-viewer-media">
+          <img id="story-viewer-image" src="" alt="Story media content">
+        </div>
+
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', viewerHTML);
+
+  // Selector endpoints
+  const viewer = document.getElementById('story-viewer');
+  const closeBtn = document.getElementById('close-story-btn');
+  const avatarEl = document.getElementById('story-viewer-avatar');
+  const usernameEl = document.getElementById('story-viewer-username');
+  const imageEl = document.getElementById('story-viewer-image');
+  const progressBar = document.getElementById('story-progress-bar');
+
+  let storyTimer = null;
+
+  // Sample static story content map
+  const sampleStories = {
+    'Your Story': {
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%2338bdf8'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%2338bdf8'/></svg>",
+      image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='700' viewBox='0 0 400 700'><defs><linearGradient id='sg5' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23064e3b'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23sg5)'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%2334d399' font-family='sans-serif' font-size='22' font-weight='bold' opacity='0.85'>👋 Welcome to your Story!</text></svg>"
+    },
+    'sarah_m': {
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%23a855f7'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%23a855f7'/></svg>",
+      image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='700' viewBox='0 0 400 700'><defs><linearGradient id='sg1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%234c1d95'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23sg1)'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-size='22' font-weight='bold' opacity='0.85'>🏔️ Mountain Sunrise Story</text></svg>"
+    },
+    'lucas_dev': {
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%23f43f5e'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%23f43f5e'/></svg>",
+      image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='700' viewBox='0 0 400 700'><defs><linearGradient id='sg2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23115e59'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23sg2)'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%232dd4bf' font-family='monospace' font-size='20' font-weight='bold' opacity='0.9'>npm run deploy</text></svg>"
+    },
+    'emma_clicks': {
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%2310b981'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%2310b981'/></svg>",
+      image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='700' viewBox='0 0 400 700'><defs><linearGradient id='sg3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23831843'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23sg3)'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-size='22' font-weight='bold' opacity='0.85'>🌅 Sunset Vibes</text></svg>"
+    },
+    'ryan_coder': {
+      avatar: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23121214'/><circle cx='50' cy='40' r='20' fill='%23f59e0b'/><path d='M20,85 C20,70 30,60 50,60 C70,60 80,70 80,85' fill='%23f59e0b'/></svg>",
+      image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='700' viewBox='0 0 400 700'><defs><linearGradient id='sg4' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%2378350f'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23sg4)'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23fbbf24' font-family='sans-serif' font-size='22' font-weight='bold' opacity='0.85'>☕ Coding Night Session</text></svg>"
+    }
+  };
+
+  // Bind click handlers to all stories items
+  const storyItems = storiesSection.querySelectorAll('.story-item');
+  storyItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const usernameText = item.querySelector('.story-username').textContent.trim();
+      const storyData = sampleStories[usernameText];
+      
+      if (storyData) {
+        openStory(usernameText, storyData);
+      }
+    });
+  });
+
+  // Open story viewport overlay
+  function openStory(username, data) {
+    // If a current profile is saved in localStorage, sync the 'Your Story' avatar dynamically
+    if (username === 'Your Story') {
+      const localProfile = JSON.parse(localStorage.getItem('connectify_user_profile'));
+      if (localProfile && localProfile.avatar) {
+        avatarEl.src = localProfile.avatar;
+      } else {
+        avatarEl.src = data.avatar;
+      }
+    } else {
+      avatarEl.src = data.avatar;
+    }
+
+    usernameEl.textContent = username;
+    imageEl.src = data.image;
+
+    // Reset progress indicator bar to trigger reflow
+    progressBar.classList.remove('animating');
+    void progressBar.offsetWidth; // Force a DOM reflow
+    progressBar.classList.add('animating');
+
+    viewer.style.display = 'flex';
+
+    // Clear any active timer instances
+    if (storyTimer) clearTimeout(storyTimer);
+
+    // Auto-close overlay after 5 seconds (5000ms)
+    storyTimer = setTimeout(() => {
+      closeStory();
+    }, 5000);
+  }
+
+  // Close story viewport overlay
+  function closeStory() {
+    viewer.style.display = 'none';
+    progressBar.classList.remove('animating');
+    if (storyTimer) clearTimeout(storyTimer);
+  }
+
+  // Bind close buttons and escape keys
+  closeBtn.addEventListener('click', closeStory);
+  
+  viewer.addEventListener('click', (e) => {
+    if (e.target === viewer) {
+      closeStory();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && viewer.style.display === 'flex') {
+      closeStory();
+    }
   });
 }
